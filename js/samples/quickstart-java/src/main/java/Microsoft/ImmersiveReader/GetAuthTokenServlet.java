@@ -5,6 +5,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.owasp.encoder.Encode;
 
 public class GetAuthTokenServlet extends HttpServlet {
 
@@ -25,9 +26,10 @@ public class GetAuthTokenServlet extends HttpServlet {
         }
 
         String token = getToken();
+        String sanitizedToken = Encode.forJava(token);
 
         PrintWriter writer = httpServletResponse.getWriter();
-        writer.write(token);
+        writer.write(sanitizedToken);
         writer.flush();
     }
 

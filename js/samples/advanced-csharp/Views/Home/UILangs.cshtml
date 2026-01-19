@@ -1,20 +1,20 @@
-﻿@page
-@model IndexModel
-
-<!-- Copyright (c) Microsoft Corporation. All rights reserved.
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved.
      Licensed under the MIT License. -->
+﻿@{
+    var token = ViewData["Token"] as string;
+    var subdomain = ViewData["Subdomain"] as string;
+}
 
-@using AdvancedSampleWebApp.Pages
-
+<!doctype html>
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Immersive Reader Example: Section</title>
+    <title>Immersive Reader Example: UI Langs</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    <script type='text/javascript' src='https://ircdname.azureedge.net/immersivereadersdk/immersive-reader-sdk.1.3.0.js'></script>
+    <script type='text/javascript' src='https://ircdname.azureedge.net/immersivereadersdk/immersive-reader-sdk.1.4.0.js'></script>
     <script type='text/javascript' src='~/js/helpers.js'></script>
 
     <link href='~/css/styles.css' rel='stylesheet'>
@@ -67,33 +67,37 @@
         }
     </style>
 </head>
-
 <body class='body'>
     <nav>
         Examples:
-        <a href='/index' class='active'>Sections</a>
-        <a href='/document'>Document</a>
-        <a href='/multilang'>Multilingual Document</a>
-        <a href='/uilangs'>UI Language</a>
-        <a href='/math'>Math</a>
-        <a href='/worddoc'>Word Document</a>
-        <a href='/options'>Options</a>
+        <a href='@Url.Action("Index", "Home")' class='active'>Sections</a>
+        <a href='@Url.Action("Document", "Home")'>Document</a>
+        <a href='@Url.Action("MultiLang", "Home")'>Multilingual Document</a>
+        <a href='@Url.Action("UILangs", "Home")'>UI Language</a>
+        <a href='@Url.Action("Math", "Home")'>Math</a>
+        <a href='@Url.Action("WordDoc", "Home")'>Word Document</a>
+        <a href='@Url.Action("Options", "Home")'>Options</a>
     </nav>
+
     <main id='ContentArea'>
+        <h1>You can specify your desired language for the UI!</h1>
+        <p>If needed, the Immersive Reader's UI can be opened in a variety of languages. In order to change it, specify the language tag via the <code>uiLang</code> option</p>
+        <h3>Examples:</h3><br />
         <section class='section' id='Sample1'>
             <div class='immersive-reader-button ir-button-small' onclick='handleLaunchImmersiveReader(1)'></div>
+            Open UI with language tag: <input id='lang1' value='en' /> (i.e 'fr', 'es', 'de', 'zh')
             <h3 id='title1'>Geography</h3>
             <p id='text1'>The study of Earth's landforms is called physical geography. Landforms can be mountains and valleys. They can also be glaciers, lakes or rivers. Landforms are sometimes called physical features. It is important for students to know about the physical geography of Earth. The seasons, the atmosphere and all the natural processes of Earth affect where people are able to live. Geography is one of a combination of factors that people use to decide where they want to live.</p>
         </section>
         <div id='Cols'>
             <section class='section' id='Sample2'>
                 <div class='immersive-reader-button ir-button-small' onclick='handleLaunchImmersiveReader(2)'></div>
-                <h3 id='title2'>Water</h3>
+                <h3 id='title2'>Water (open UI in Spanish - <span id='lang2'>es-es</span>)</h3>
                 <p id='text2'>Fresh water sources also influence where people settle. People need water to drink. They also need it for washing. Throughout history, people have settled near fresh water. Living near a water source helps ensure that people have the water they need.</p>
             </section>
             <section class='section' id='Sample3'>
                 <div class='immersive-reader-button ir-button-small' onclick='handleLaunchImmersiveReader(3)'></div>
-                <h3 id='title3'>Mountain Ranges</h3>
+                <h3 id='title3'>Mountain Ranges (open UI in German - <span id='lang3'>de</span>)</h3>
                 <p id='text3'>The physical features of a region are often rich in resources. Within a nation, mountain ranges become natural borders for settlement areas. In the U.S., major mountain ranges are the Sierra Nevada, the Rocky Mountains, and the Appalachians.</p>
             </section>
         </div>
@@ -109,13 +113,17 @@
                 }]
             };
 
-            const token = await getImmersiveReaderTokenAsync(Canary);
-            const subdomain = await getImmersiveReaderSubdomainAsync();
+            var uiLangEl = $('#lang' + sampleId);
+            var uiLang = uiLangEl.val() || uiLangEl.text();
 
             // Learn more about options https://docs.microsoft.com/azure/cognitive-services/immersive-reader/reference#options
             const options = {
+                uiLang: uiLang,
                 onExit: exitCallback
             };
+
+            let token = "@token";
+            const subdomain = "@subdomain";
 
             await ImmersiveReader.launchAsync(token, subdomain, data, options)
                 .then(() => {

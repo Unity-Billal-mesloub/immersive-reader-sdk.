@@ -1,10 +1,7 @@
-﻿using System.Text;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using QuickstartSampleWebApp.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
-namespace QuickstartSampleWebApp.Controllers
+namespace AdvancedSampleWebApp.Controllers
 {
     public class HomeController : Controller
     {
@@ -17,8 +14,10 @@ namespace QuickstartSampleWebApp.Controllers
         private IConfidentialClientApplication _confidentialClientApplication;
         private IConfidentialClientApplication ConfidentialClientApplication
         {
-            get {
-                if (_confidentialClientApplication == null) {
+            get
+            {
+                if (_confidentialClientApplication == null)
+                {
                     _confidentialClientApplication = ConfidentialClientApplicationBuilder.Create(ClientId)
                     .WithClientSecret(ClientSecret)
                     .WithAuthority($"https://login.windows.net/{TenantId}")
@@ -29,8 +28,7 @@ namespace QuickstartSampleWebApp.Controllers
             }
         }
 
-        public HomeController(Microsoft.Extensions.Configuration.IConfiguration configuration)
-        {
+        public HomeController(Microsoft.Extensions.Configuration.IConfiguration configuration) {
             TenantId = configuration["TenantId"];
             ClientId = configuration["ClientId"];
             ClientSecret = configuration["ClientSecret"];
@@ -38,22 +36,22 @@ namespace QuickstartSampleWebApp.Controllers
 
             if (string.IsNullOrWhiteSpace(TenantId))
             {
-                throw new ArgumentNullException("TenantId is null! Did you add that info to secrets.json?");
+                throw new ArgumentNullException("TenantId is null! Did you add that info to secrets.json? See ReadMe.txt.");
             }
 
             if (string.IsNullOrWhiteSpace(ClientId))
             {
-                throw new ArgumentNullException("ClientId is null! Did you add that info to secrets.json?");
+                throw new ArgumentNullException("ClientId is null! Did you add that info to secrets.json? See ReadMe.txt.");
             }
 
             if (string.IsNullOrWhiteSpace(ClientSecret))
             {
-                throw new ArgumentNullException("ClientSecret is null! Did you add that info to secrets.json?");
+                throw new ArgumentNullException("ClientSecret is null! Did you add that info to secrets.json? See ReadMe.txt.");
             }
 
             if (string.IsNullOrWhiteSpace(Subdomain))
             {
-                throw new ArgumentNullException("Subdomain is null! Did you add that info to secrets.json?");
+                throw new ArgumentNullException("Subdomain is null! Did you add that info to secrets.json? See ReadMe.txt.");
             }
         }
 
@@ -72,31 +70,81 @@ namespace QuickstartSampleWebApp.Controllers
             Token = authResult.AccessToken;
         }
 
-        public async Task<IActionResult> Index()
+        /// <summary>
+        /// Get the home page
+        /// </summary>
+        public async Task<ActionResult> Index()
         {
             await GetTokenAsync();
-            ViewData["Token"] = Token;
             ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Options()
+        /// <summary>
+        /// Get the document page
+        /// </summary>
+        public async Task<ActionResult> Document()
         {
             await GetTokenAsync();
-            ViewData["Token"] = Token;
             ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        /// <summary>
+        /// Get the math page
+        /// </summary>
+        public async Task<ActionResult> Math()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await GetTokenAsync();
+            ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
+            return View();
+        }
+
+        /// <summary>
+        /// Get the multi-lang page
+        /// </summary>
+        public async Task<ActionResult> MultiLang()
+        {
+            await GetTokenAsync();
+            ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
+            return View();
+        }
+
+        /// <summary>
+        /// Get the options page
+        /// </summary>
+        public async Task<ActionResult> Options()
+        {
+            await GetTokenAsync();
+            ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
+            return View();
+        }
+
+        /// <summary>
+        /// Get the ui-langs page
+        /// </summary>
+        public async Task<ActionResult> UILangs()
+        {
+            await GetTokenAsync();
+            ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
+            return View();
+        }
+
+        /// <summary>
+        /// Get the word-doc page
+        /// </summary>
+        public async Task<ActionResult> WordDoc()
+        {
+            await GetTokenAsync();
+            ViewData["Subdomain"] = Subdomain;
+            ViewData["Token"] = Token;
+            return View();
         }
     }
 }

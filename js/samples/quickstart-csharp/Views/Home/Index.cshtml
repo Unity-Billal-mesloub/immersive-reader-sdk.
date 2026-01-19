@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Immersive Reader C# Quickstart";
+    var token = ViewData["Token"] as string;
+    var subdomain = ViewData["Subdomain"] as string;
 }
 
 @section Styles {
@@ -62,7 +64,7 @@
 
 @section Scripts
 {
-    <script src="https://ircdname.azureedge.net/immersivereadersdk/immersive-reader-sdk.1.3.0.js"></script>
+    <script src="https://ircdname.azureedge.net/immersivereadersdk/immersive-reader-sdk.1.4.0.js"></script>
     <script>
         function getTokenAndSubdomainAsync() {
             return new Promise(function (resolve, reject) {
@@ -88,34 +90,27 @@
         });
 
         function handleLaunchImmersiveReader() {
-            getTokenAndSubdomainAsync()
-                .then(function (response) {
-                    const token = response["token"];
-                    const subdomain = response["subdomain"];
+            const token = "@token";
+            const subdomain = "@subdomain";
 
-                    // Learn more about chunk usage and supported MIME types https://docs.microsoft.com/azure/cognitive-services/immersive-reader/reference#chunk
-                    const data = {
-                        title: $("#ir-title").text(),
-                        chunks: [{
-                            content: $("#ir-content").html(),
-                            mimeType: "text/html"
-                        }]
-                    };
+            // Learn more about chunk usage and supported MIME types https://docs.microsoft.com/azure/cognitive-services/immersive-reader/reference#chunk
+            const data = {
+                title: $("#ir-title").text(),
+                chunks: [{
+                    content: $("#ir-content").html(),
+                    mimeType: "text/html"
+                }]
+            };
 
-                    // Learn more about options https://docs.microsoft.com/azure/cognitive-services/immersive-reader/reference#options
-                    const options = {
-                        onExit: exitCallback
-                    };
+            // Learn more about options https://docs.microsoft.com/azure/cognitive-services/immersive-reader/reference#options
+            const options = {
+                onExit: exitCallback
+            };
 
-                    ImmersiveReader.launchAsync(token, subdomain, data, options)
-                        .catch(function (error) {
-                            console.log(error);
-                            alert("Error in launching the Immersive Reader. Check the console.");
-                        });
-                })
+            ImmersiveReader.launchAsync(token, subdomain, data, options)
                 .catch(function (error) {
                     console.log(error);
-                    alert("Error in getting the Immersive Reader token and subdomain. Check the console.");
+                    alert("Error in launching the Immersive Reader. Check the console.");
                 });
         }
 
